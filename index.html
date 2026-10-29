@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduAvalia | Gerador de Avaliações</title>
+
+<style>
+:root {
+  --verde: #008568;
+  --fundo: #f2f5f4;
+  --borda: #dce5e1;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #24332f;
+  background: var(--fundo);
+}
+
+header {
+  background: white;
+  padding: 20px 5%;
+  border-bottom: 1px solid var(--borda);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo {
+  background: var(--verde);
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 22px;
+}
+
+header h1 { margin: 0; font-size: 24px; }
+header p { margin: 5px 0 0; color: #64746e; }
+
+main {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 22px;
+  padding: 24px;
+  max-width: 1500px;
+  margin: auto;
+}
+
+.painel, .area-prova {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 15px;
+  padding: 22px;
+  box-shadow: 0 3px 12px #173b2c0b;
+}
+
+h2 { font-size: 19px; margin-top: 0; }
+
+label {
+  display: block;
+  margin: 16px 0 7px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #ccd8d3;
+  border-radius: 7px;
+  font: inherit;
+  background: white;
+}
+
+textarea { min-height: 100px; resize: vertical; }
+
+button {
+  border: none;
+  background: var(--verde);
+  color: white;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+button:hover { background: #006c55; }
+
+.secundario {
+  background: #e8f4ef;
+  color: #006c55;
+}
+
+.botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.aviso {
+  background: #fff7df;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 18px;
+}
+
+.folha {
+  max-width: 850px;
+  margin: 20px auto;
+  padding: 38px;
+  border: 1px solid #ddd;
+  background: white;
+  min-height: 500px;
+}
+
+.cabecalho-prova {
+  border: 2px solid #333;
+  padding: 18px;
+  margin-bottom: 24px;
+}
+
+.cabecalho-prova h2 {
+  text-align: center;
+  font-size: 20px;
+}
+
+.identificacao {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.questao {
+  margin: 22px 0;
+  line-height: 1.6;
+  break-inside: avoid;
+}
+
+.questao textarea {
+  margin-top: 8px;
+  min-height: 75px;
+}
+
+.alternativa { margin: 5px 0 5px 20px; }
+
+@media(max-width: 850px) {
+  main { grid-template-columns: 1fr; padding: 12px; }
+  .folha { padding: 20px; }
+}
+
+@media print {
+  body { background: white; }
+  header, .painel, .controles, .aviso { display: none !important; }
+  main { display: block; padding: 0; }
+  .area-prova { border: none; padding: 0; box-shadow: none; }
+  .folha {
+    max-width: none;
+    margin: 0;
+    padding: 10mm;
+    border: none;
+  }
+  .questao textarea { border: none; }
+  @page { size: A4; margin: 12mm; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">✎</div>
+  <div>
+    <h1>EduAvalia</h1>
+    <p>Gerador de Avaliações Escolares</p>
+  </div>
+</header>
+
+<main>
+
+<section class="painel">
+  <h2>1. Configurar avaliação</h2>
+
+  <label>Escola</label>
+  <input id="escola" value="E.E. Dilecta Ceneviva Martinelli">
+
+  <label>Professor</label>
+  <input id="professor" value="Eduardo Ferreira">
+
+  <label>Ano escolar</label>
+  <select id="ano">
+    <option>6º ano</option>
+    <option>7º ano</option>
+    <option>8º ano</option>
+    <option>9º ano</option>
+    <option>1ª série do Ensino Médio</option>
+    <option>2ª série do Ensino Médio</option>
+    <option>3ª série do Ensino Médio</option>
+  </select>
+
+  <label>Disciplina</label>
+  <select id="disciplina">
+    <option>Ciências</option>
+    <option>Biologia</option>
+    <option>Física</option>
+    <option>Química</option>
+    <option>Geografia</option>
+    <option>História</option>
+    <option>Matemática</option>
+    <option>Língua Portuguesa</option>
+  </select>
+
+  <label>Bimestre</label>
+  <select id="bimestre">
+    <option>1º bimestre</option>
+    <option>2º bimestre</option>
+    <option>3º bimestre</option>
+    <option selected>4º bimestre</option>
+  </select>
+
+  <label>Conteúdo das aulas</label>
+  <textarea id="conteudo"
+    placeholder="Informe os conteúdos que foram efetivamente trabalhados."></textarea>
+
+  <label>Habilidades curriculares</label>
+  <textarea id="habilidades"
+    placeholder="Informe os códigos e as descrições oficiais das habilidades."></textarea>
+
+  <label>Material utilizado em aula</label>
+  <textarea id="material"
+    placeholder="Cole um resumo do material didático, dos slides ou das atividades estudadas."></textarea>
+
+  <label>Número de questões</label>
+  <select id="quantidade">
+    <option>5</option>
+    <option selected>10</option>
+    <option>15</option>
+    <option>20</option>
+  </select>
+
+  <div class="botoes">
+    <button onclick="montarProva()">Montar avaliação</button>
+    <button class="secundario" onclick="window.print()">Imprimir / PDF</button>
+    <button class="secundario" onclick="mostrarGabarito()">Ver gabarito</button>
+  </div>
+
+  <div class="aviso">
+    <strong>Importante:</strong> esta versão ainda não consulta
+    automaticamente o Currículo Paulista nem gera questões por IA.
+    As questões de demonstração devem ser revisadas pelo professor.
+    As habilidades precisam ser verificadas em fontes oficiais.
+  </div>
+</section>
+
+<section class="area-prova">
+  <div class="controles">
+    <h2>2. Pré-visualização da avaliação</h2>
+    <p>Confira o documento antes de imprimir.</p>
+  </div>
+
+  <div class="folha" id="folha">
+    <div class="cabecalho-prova">
+      <h2 id="titulo-escola">E.E. Dilecta Ceneviva Martinelli</h2>
+      <h2>AVALIAÇÃO DO 4º BIMESTRE</h2>
+      <div class="identificacao">
+        <div>Aluno(a): __________________________</div>
+        <div>Nº: ______ Turma: ______ Data: ___/___/_____</div>
+        <div>Disciplina: Ciências</div>
+        <div>Professor(a): Eduardo Ferreira</div>
+        <div>Nota: __________</div>
+      </div>
+    </div>
+
+    <p><strong>Orientações:</strong> leia atentamente cada questão e assinale a alternativa correta.</p>
+
+    <div id="questoes">
+      <p>Configure sua avaliação e clique em "Montar avaliação".</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+const exemplos = [
+  {
+    pergunta: "Qual alternativa apresenta uma característica dos seres vivos?",
+    alternativas: [
+      "Todos produzem seu próprio alimento.",
+      "Todos são formados por células.",
+      "Todos vivem exclusivamente em ambientes terrestres.",
+      "Todos realizam fotossíntese."
+    ],
+    correta: 1
+  },
+  {
+    pergunta: "Qual atitude contribui para a preservação ambiental?",
+    alternativas: [
+      "Descartar resíduos em rios.",
+      "Desperdiçar água potável.",
+      "Separar materiais recicláveis.",
+      "Queimar lixo a céu aberto."
+    ],
+    correta: 2
+  },
+  {
+    pergunta: "Qual fonte de energia é considerada renovável?",
+    alternativas: [
+      "Carvão mineral.",
+      "Petróleo.",
+      "Gás natural.",
+      "Energia solar."
+    ],
+    correta: 3
+  }
+];
+
+let questoesAtuais = [];
+let gabaritoVisivel = false;
+
+function montarProva() {
+  const escola = document.getElementById("escola").value;
+  const professor = document.getElementById("professor").value;
+  const disciplina = document.getElementById("disciplina").value;
+  const ano = document.getElementById("ano").value;
+  const bimestre = document.getElementById("bimestre").value;
+  const conteudo = document.getElementById("conteudo").value.trim();
+  const habilidades = document.getElementById("habilidades").value.trim();
+  const material = document.getElementById("material").value.trim();
+  const quantidade = Number(document.getElementById("quantidade").value);
+
+  document.getElementById("titulo-escola").textContent = escola;
+
+  document.querySelector(".cabecalho-prova h2:nth-child(2)")
+    .textContent = "AVALIAÇÃO DO " + bimestre.toUpperCase();
+
+  document.querySelector(".identificacao").innerHTML = `
+    <div>Aluno(a): ______________________________</div>
+    <div>Nº: ______ Turma: ______ Data: ___/___/_____</div>
+    <div>Disciplina: ${escapeHTML(disciplina)} — ${escapeHTML(ano)}</div>
+    <div>Professor(a): ${escapeHTML(professor)}</div>
+    <div>Nota: __________</div>
+  `;
+
+  questoesAtuais = Array.from({length: quantidade}, (_, i) => ({
+    pergunta: i < exemplos.length
+      ? exemplos[i].pergunta
+      : "Escreva aqui a questão " + (i + 1) + " relacionada ao conteúdo estudado.",
+    alternativas: i < exemplos.length
+      ? [...exemplos[i].alternativas]
+      : ["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D"],
+    correta: i < exemplos.length ? exemplos[i].correta : null
+  }));
+
+  const aviso = conteudo || habilidades || material
+    ? `<p><strong>Referência informada pelo professor:</strong> ${escapeHTML(conteudo || material || habilidades)}</p>`
+    : `<p><em>Conteúdo e habilidades ainda não informados.</em></p>`;
+
+  document.getElementById("questoes").innerHTML =
+    aviso + questoesAtuais.map((q, i) => `
+      <div class="questao">
+        <strong>${i + 1}.</strong>
+        <textarea aria-label="Enunciado da questão ${i+1}"
+          onchange="questoesAtuais[${i}].pergunta=this.value">${escapeHTML(q.pergunta)}</textarea>
+        ${q.alternativas.map((a, j) => `
+          <div class="alternativa">
+            <label style="display:flex;gap:8px;align-items:flex-start;font-weight:normal;margin:5px 0">
+              <input type="radio" disabled style="width:auto">
+              <span>${String.fromCharCode(65+j)}) ${escapeHTML(a)}</span>
+            </label>
+          </div>
+        `).join("")}
+      </div>
+    `).join("");
+
+  gabaritoVisivel = false;
+}
+
+function mostrarGabarito() {
+  if (!questoesAtuais.length) {
+    montarProva();
+  }
+
+  const gabarito = questoesAtuais.map((q, i) =>
+    `${i+1}. ${q.correta === null ? "Pendente de revisão" : String.fromCharCode(65+q.correta)}`
+  ).join("<br>");
+
+  document.getElementById("questoes").insertAdjacentHTML(
+    "beforeend",
+    `<div class="questao"><h3>Gabarito do professor</h3>${gabarito}</div>`
+  );
+
+  gabaritoVisivel = true;
+}
+
+function escapeHTML(valor) {
+  return String(valor).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[c]);
+}
+</script>
+
+</body>
+</html>
